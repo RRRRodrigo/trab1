@@ -26,9 +26,8 @@ PROGRAMA:
                                    printf("\n   ADD r2, r2, #1");    // r2++;
                                    printf("\n   CMP r2, r1");        
                                    printf("\n   BLT mul");           // se cnt < [r1], volta pra mul
-                                   printf("\nSTMDB sp!, {r0}");    // empilha o resultado
-                                   printf("\n   mov pc, lr");        // retorna para o codigo
-                                   
+                                   printf("\n   STMDB sp!, {r0}");    // empilha o resultado
+                                   printf("\n   MOV pc, lr");        // retorna para o codigo                                   
 
                                    printf("\nexit");
                                  }
@@ -36,15 +35,11 @@ PROGRAMA:
         |
         ;
 
-
-
 EXPRESSAO:
     INT { //$$ = $1;
           printf("\nMOV r0, #%d", $1);
-          printf("\nSTMDB sp!, {r0}");
-        
+          printf("\nSTMDB sp!, {r0}");        
           }
-
 
     | EXPRESSAO SOMA EXPRESSAO  {
     
@@ -64,7 +59,17 @@ EXPRESSAO:
 
         }
 
-    | EXPRESSAO MULT EXPRESSAO {
+    | EXPRESSAO MULT SUB EXPRESSAO {      //  identifica mutiplicaçao
+        printf("\nLDMIA  sp!, {r1}");   // desempilha em r1
+        printf("\nLDMIA  sp!, {r0}");   // desempilha em r0
+        printf("\nMOV r2, #1");         // contador <- 1
+        printf("\nRSBS r0, r0, #0");    // inverte o sinal de r0
+        printf("\nMOV r3, r0");         // copia o valor de r0 em r3
+        printf("\nBL mul");
+        flagMUL = 1;
+    }
+
+    | EXPRESSAO MULT EXPRESSAO {      //  identifica mutiplicaçao
         printf("\nLDMIA  sp!, {r1}");   // desempilha em r1
         printf("\nLDMIA  sp!, {r0}");   // desempilha em r0
         printf("\nMOV r2, #1");         // contador <- 1
@@ -73,7 +78,13 @@ EXPRESSAO:
         flagMUL = 1;
     }
 
-    | PAR_E EXPRESSAO PAR_D {
+    | SUB INT {                 // identifica numeros negativos
+        $$ = - $2;
+        printf("\nMOV r0, #-%d", $2);
+        printf("\nSTMDB sp!, {r0}");    
+      }
+
+    | PAR_E EXPRESSAO PAR_D {           // identifica valor entre parenteses
        $$ = $2;
     }              
     ;
