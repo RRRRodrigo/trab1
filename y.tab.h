@@ -47,19 +47,21 @@ extern int yydebug;
   {
     INT = 258,
     SOMA = 259,
-    EOL = 260,
-    MULT = 261,
-    PAR_E = 262,
-    PAR_D = 263
+    SUB = 260,
+    EOL = 261,
+    MULT = 262,
+    PAR_E = 263,
+    PAR_D = 264
   };
 #endif
 /* Tokens.  */
 #define INT 258
 #define SOMA 259
-#define EOL 260
-#define MULT 261
-#define PAR_E 262
-#define PAR_D 263
+#define SUB 260
+#define EOL 261
+#define MULT 262
+#define PAR_E 263
+#define PAR_D 264
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
