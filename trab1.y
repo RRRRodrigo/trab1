@@ -22,9 +22,9 @@ PROGRAMA:
                                                           // nao executar essa parte ao final do codigo
                             
                                    printf("\nmul");
-                                   printf("\n   ADD r0, r0, r3");    // r0 <- r0 + r3
-                                   printf("\n   ADD r2, r2, #1");    // r2++;
-                                   printf("\n   CMP r2, r1");        
+                                   printf("\n   CMP r2, r1");  
+                                   printf("\n   ADDLT r0, r0, r3");    // r0 <- r0 + r3 se cnt<[r1]
+                                   printf("\n   ADD r2, r2, #1");    // r2++;      
                                    printf("\n   BLT mul");           // se cnt < [r1], volta pra mul
                                    printf("\n   STMDB sp!, {r0}");    // empilha o resultado
                                    printf("\n   MOV pc, lr");        // retorna para o codigo                                   
