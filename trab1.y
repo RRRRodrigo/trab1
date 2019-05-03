@@ -22,15 +22,30 @@ PROGRAMA:
                                                           // nao executar essa parte ao final do codigo
                             
                                    printf("\nmul");
-                                   printf("\n   CMP r2, r1");  
+                                   printf("\n   MOV r4, #0");
+                                   printf("\n   CMP r0, #0");
+                                   printf("\n   MOVEQ r0, #0");
+                                   printf("\n   MOVEQ pc, lr");
+                                   printf("\n   MVNLT R4, R4");
+                                   printf("\n   RSBLT R0, R0, #0");
+                                   printf("\n   RSBLT R3, R3, #0");
+                                   printf("\n   CMP r1, #0");
+                                   printf("\n   MOVEQ r0, #0");
+                                   printf("\n   MOVEQ pc, lr");
+                                   printf("\n   MVNLT R4, R4");
+                                   printf("\n   RSBLT R1, R1, #0");
+                                   printf("\nmul2");
+                                   printf("\n   CMP r2, r1"); 
                                    printf("\n   ADDLT r0, r0, r3");    // r0 <- r0 + r3 se cnt<[r1]
                                    printf("\n   ADD r2, r2, #1");    // r2++;      
-                                   printf("\n   BLT mul");           // se cnt < [r1], volta pra mul
+                                   printf("\n   BLT mul2");           // se cnt < [r1], volta pra mul
+                                   printf("\n   CMP R4, #0");
+                                   printf("\n   RSBNE R0, R0, #0");  
                                    printf("\n   STMDB sp!, {r0}");    // empilha o resultado
                                    printf("\n   MOV pc, lr");        // retorna para o codigo                                   
 
                                    printf("\nexit");
-                                 }
+                                   }
                               }
         |
         ;
@@ -40,6 +55,15 @@ EXPRESSAO:
           printf("\nMOV r0, #%d", $1);
           printf("\nSTMDB sp!, {r0}");        
           }
+
+    | EXPRESSAO MULT EXPRESSAO {      //  identifica mutiplicaçao
+        printf("\nLDMIA  sp!, {r1}");   // desempilha em r1
+        printf("\nLDMIA  sp!, {r0}");   // desempilha em r0
+        printf("\nMOV r2, #1");         // contador <- 1
+        printf("\nMOV r3, r0");         // copia o valor de r0 em r3
+        printf("\nBL mul");
+        flagMUL = 1;
+    }
 
     | EXPRESSAO SOMA EXPRESSAO  {
     
@@ -58,25 +82,6 @@ EXPRESSAO:
         printf("\nSTMDB sp!, {r0}");    // empilha o resultado
 
         }
-
-    | EXPRESSAO MULT SUB EXPRESSAO {      //  identifica mutiplicaçao
-        printf("\nLDMIA  sp!, {r1}");   // desempilha em r1
-        printf("\nLDMIA  sp!, {r0}");   // desempilha em r0
-        printf("\nMOV r2, #1");         // contador <- 1
-        printf("\nRSBS r0, r0, #0");    // inverte o sinal de r0
-        printf("\nMOV r3, r0");         // copia o valor de r0 em r3
-        printf("\nBL mul");
-        flagMUL = 1;
-    }
-
-    | EXPRESSAO MULT EXPRESSAO {      //  identifica mutiplicaçao
-        printf("\nLDMIA  sp!, {r1}");   // desempilha em r1
-        printf("\nLDMIA  sp!, {r0}");   // desempilha em r0
-        printf("\nMOV r2, #1");         // contador <- 1
-        printf("\nMOV r3, r0");         // copia o valor de r0 em r3
-        printf("\nBL mul");
-        flagMUL = 1;
-    }
 
     | SUB INT {                 // identifica numeros negativos
         $$ = - $2;
